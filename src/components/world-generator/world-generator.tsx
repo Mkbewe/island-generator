@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 
 import type { Params } from '../../types/world.types';
-import { generateWorldMap } from '../../utils/world-generation';
+import { generateWorldMap } from '../../utils/world-generation/world-generation';
 import { WorldGeneratorForm } from '../world-generator-form';
 import styles from './world-generator.module.css';
 

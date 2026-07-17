@@ -16,7 +16,7 @@
     "jsx": "react-jsx",
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": ["vite/client"],
+    "types": ["vite/client", "vitest/globals"],
 
     /* Linting */
     "strict": true,
