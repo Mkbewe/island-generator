@@ -9,11 +9,7 @@ interface WorldGeneratorFormProps {
   generateMap: () => void;
 }
 
-export function WorldGeneratorForm({
-  params,
-  updateParam,
-  generateMap,
-}: WorldGeneratorFormProps) {
+export function WorldGeneratorForm({ params, updateParam, generateMap }: WorldGeneratorFormProps) {
   const randomizeSeed = (): void => {
     const newSeed = Math.floor(Math.random() * 1000000);
     updateParam('seed', newSeed.toString());
@@ -21,6 +17,7 @@ export function WorldGeneratorForm({
 
   useEffect(() => {
     randomizeSeed();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div className={styles.controls}>
