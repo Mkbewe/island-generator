@@ -7,7 +7,37 @@ on:
     branches: [master, develop]
 
 jobs:
+  check-branch:
+    name: Validate Branch
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.base_ref == 'master'
+
+    steps:
+      - name: Check if source branch is allowed
+        run: |
+          SOURCE_BRANCH="${{ github.head_ref }}"
+
+          echo "PR source branch: $SOURCE_BRANCH"
+          echo "PR target branch: ${{ github.base_ref }}"
+
+          # Allow only develop or release/* branches to merge to master
+          if [[ "$SOURCE_BRANCH" == "develop" ]] || [[ "$SOURCE_BRANCH" == release/* ]]; then
+            echo "✅ Branch $SOURCE_BRANCH is allowed to merge to master"
+            exit 0
+          else
+            echo "❌ ERROR: Branch $SOURCE_BRANCH cannot be merged directly to master!"
+            echo ""
+            echo "Only these branches can be merged to master:"
+            echo "  - develop"
+            echo "  - release/*"
+            echo ""
+            echo "Please merge your changes to develop first, then create a release."
+            exit 1
+          fi
+
   quality:
+    needs: [check-branch]
+    if: always() && (needs.check-branch.result == 'success' || needs.check-branch.result == 'skipped')
     name: Code Quality
     runs-on: ubuntu-latest
 
@@ -42,6 +72,8 @@ jobs:
         run: pnpm build
 
   test:
+    needs: [check-branch]
+    if: always() && (needs.check-branch.result == 'success' || needs.check-branch.result == 'skipped')
     name: Tests
     runs-on: ubuntu-latest
 
